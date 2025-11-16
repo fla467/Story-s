@@ -2,29 +2,56 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>My Book & Story Collection</title>
+  <title>My Story Library</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      margin: 20px;
-      background: #f4f4f9;
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      background: #f9fafc;
+      color: #333;
     }
-    h1 {
+    header {
+      background: #4a90e2;
+      color: white;
+      padding: 20px;
       text-align: center;
     }
-    .book-list {
-      margin-top: 20px;
+    #container {
+      display: flex;
+      min-height: 100vh;
     }
-    .book {
+    #sidebar {
+      width: 30%;
       background: #fff;
+      border-right: 1px solid #ddd;
+      padding: 20px;
+      overflow-y: auto;
+    }
+    #sidebar h2 {
+      margin-top: 0;
+    }
+    .story-title {
       padding: 10px;
-      margin-bottom: 10px;
+      margin: 5px 0;
+      background: #f1f1f1;
       border-radius: 5px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .story-title:hover {
+      background: #e0e0e0;
+    }
+    #content {
+      flex: 1;
+      padding: 30px;
+      background: #fdfdfd;
+    }
+    #content h2 {
+      margin-top: 0;
     }
     form {
       margin-top: 20px;
-      background: #e9ecef;
+      background: #eef3f7;
       padding: 15px;
       border-radius: 5px;
     }
@@ -36,7 +63,7 @@
       border-radius: 4px;
     }
     button {
-      background: #007bff;
+      background: #4a90e2;
       color: white;
       border: none;
       padding: 10px 15px;
@@ -44,57 +71,144 @@
       cursor: pointer;
     }
     button:hover {
-      background: #0056b3;
+      background: #357abd;
+    }
+    .infographic {
+      background: #e8f5e9;
+      padding: 15px;
+      border-radius: 8px;
+      margin-top: 10px;
+    }
+    .infographic ul {
+      list-style: none;
+      padding: 0;
+    }
+    .infographic li {
+      padding: 5px 0;
     }
   </style>
 </head>
 <body>
-  <h1>📚 My Book & Story Collection</h1>
-
-  <div class="book-list" id="bookList">
-    <!-- Preloaded 15 stories -->
+  <header>
+    <h1>📖 My Story Library</h1>
+  </header>
+  <div id="container">
+    <div id="sidebar">
+      <h2>Stories</h2>
+      <div id="storyList"></div>
+      <form id="addForm">
+        <h3>Add a New Story</h3>
+        <input type="text" id="newTitle" placeholder="Title" required>
+        <textarea id="newContent" placeholder="Story text or info..." required></textarea>
+        <button type="submit">Add Story</button>
+      </form>
+    </div>
+    <div id="content">
+      <h2>Welcome</h2>
+      <p>Select a story from the left to read it here.</p>
+    </div>
   </div>
 
-  <form id="bookForm">
-    <h2>Add a New Book/Story</h2>
-    <input type="text" id="title" placeholder="Title" required>
-    <textarea id="content" placeholder="Write your story or info here..." required></textarea>
-    <button type="submit">Add</button>
-  </form>
-
   <script>
-    // Preloaded 15 sample stories
-    const initialStories = Array.from({length: 15}, (_, i) => ({
-      title: `Story ${i+1}`,
-      content: `This is the content of story number ${i+1}.`
-    }));
+    const stories = [
+      {title: "The Lost Forest", content: "Once upon a time, a forest hid secrets of ancient travelers."},
+      {title: "Ocean’s Whisper", content: "The waves carried tales of sailors who never returned."},
+      {title: "Mountain Echo", content: "Legends say the mountain repeats the cries of heroes."},
+      {title: "City of Glass", content: "A city where every building reflected the stars."},
+      {title: "Desert Mirage", content: "Travelers chased illusions that taught them wisdom."},
+      {title: "River of Time", content: "This river flowed not with water, but with memories."},
+      {title: "Garden of Dreams", content: "Flowers bloomed with the wishes of children."},
+      {title: "Silent Library", content: "Books whispered only to those who listened closely."},
+      {title: "Hidden Door", content: "Behind the door was a world of endless skies."},
+      {title: "The Clockmaker", content: "He built clocks that ticked with people’s destinies."},
+      // Infographics
+      {title: "Infographic: Healthy Habits", content: `
+        <div class="infographic">
+          <h3>5 Daily Habits</h3>
+          <ul>
+            <li>🥦 Eat vegetables</li>
+            <li>🚶 Walk 30 minutes</li>
+            <li>💧 Drink water</li>
+            <li>📚 Read a book</li>
+            <li>😴 Sleep 8 hours</li>
+          </ul>
+        </div>`},
+      {title: "Infographic: Study Tips", content: `
+        <div class="infographic">
+          <h3>Top 5 Study Tips</h3>
+          <ul>
+            <li>📑 Make summaries</li>
+            <li>⏰ Use Pomodoro</li>
+            <li>🖊️ Practice writing</li>
+            <li>🤔 Self-test often</li>
+            <li>📵 Limit distractions</li>
+          </ul>
+        </div>`},
+      {title: "Infographic: Travel Essentials", content: `
+        <div class="infographic">
+          <h3>Don’t Forget!</h3>
+          <ul>
+            <li>🧳 Passport</li>
+            <li>💳 Money</li>
+            <li>📱 Phone & charger</li>
+            <li>👕 Clothes</li>
+            <li>🩹 First aid kit</li>
+          </ul>
+        </div>`},
+      {title: "Infographic: Productivity Hacks", content: `
+        <div class="infographic">
+          <h3>Boost Your Day</h3>
+          <ul>
+            <li>🌅 Start early</li>
+            <li>📝 Plan tasks</li>
+            <li>☕ Take breaks</li>
+            <li>📧 Batch emails</li>
+            <li>🏃 Exercise</li>
+          </ul>
+        </div>`},
+      {title: "Infographic: Eco-Friendly Living", content: `
+        <div class="infographic">
+          <h3>Go Green</h3>
+          <ul>
+            <li>♻️ Recycle</li>
+            <li>🚲 Bike instead of drive</li>
+            <li>💡 Save energy</li>
+            <li>🌱 Plant trees</li>
+            <li>🛍️ Use reusable bags</li>
+          </ul>
+        </div>`}
+    ];
 
-    const bookList = document.getElementById('bookList');
-    const bookForm = document.getElementById('bookForm');
-    const titleInput = document.getElementById('title');
-    const contentInput = document.getElementById('content');
+    const storyList = document.getElementById('storyList');
+    const content = document.getElementById('content');
+    const addForm = document.getElementById('addForm');
 
-    // Function to render a book/story
-    function renderBook(book) {
-      const div = document.createElement('div');
-      div.className = 'book';
-      div.innerHTML = `<h3>${book.title}</h3><p>${book.content}</p>`;
-      bookList.appendChild(div);
+    function renderList() {
+      storyList.innerHTML = '';
+      stories.forEach((story, index) => {
+        const div = document.createElement('div');
+        div.className = 'story-title';
+        div.textContent = story.title;
+        div.onclick = () => showStory(index);
+        storyList.appendChild(div);
+      });
     }
 
-    // Load initial stories
-    initialStories.forEach(renderBook);
+    function showStory(index) {
+      const story = stories[index];
+      content.innerHTML = `<h2>${story.title}</h2><p>${story.content}</p>`;
+    }
 
-    // Handle form submission
-    bookForm.addEventListener('submit', function(e) {
+    addForm.addEventListener('submit', e => {
       e.preventDefault();
-      const newBook = {
-        title: titleInput.value,
-        content: contentInput.value
-      };
-      renderBook(newBook);
-      bookForm.reset();
+      const newTitle = document.getElementById('newTitle').value;
+      const newContent = document.getElementById('newContent').value;
+      stories.push({title: newTitle, content: newContent});
+      renderList();
+      addForm.reset();
     });
+
+    renderList();
   </script>
 </body>
 </html>

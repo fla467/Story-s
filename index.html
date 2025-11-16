@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>My Book & Story Collection</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      background: #f4f4f9;
+    }
+    h1 {
+      text-align: center;
+    }
+    .book-list {
+      margin-top: 20px;
+    }
+    .book {
+      background: #fff;
+      padding: 10px;
+      margin-bottom: 10px;
+      border-radius: 5px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    form {
+      margin-top: 20px;
+      background: #e9ecef;
+      padding: 15px;
+      border-radius: 5px;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 8px;
+      margin: 5px 0;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    button {
+      background: #007bff;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <h1>📚 My Book & Story Collection</h1>
+
+  <div class="book-list" id="bookList">
+    <!-- Preloaded 15 stories -->
+  </div>
+
+  <form id="bookForm">
+    <h2>Add a New Book/Story</h2>
+    <input type="text" id="title" placeholder="Title" required>
+    <textarea id="content" placeholder="Write your story or info here..." required></textarea>
+    <button type="submit">Add</button>
+  </form>
+
+  <script>
+    // Preloaded 15 sample stories
+    const initialStories = Array.from({length: 15}, (_, i) => ({
+      title: `Story ${i+1}`,
+      content: `This is the content of story number ${i+1}.`
+    }));
+
+    const bookList = document.getElementById('bookList');
+    const bookForm = document.getElementById('bookForm');
+    const titleInput = document.getElementById('title');
+    const contentInput = document.getElementById('content');
+
+    // Function to render a book/story
+    function renderBook(book) {
+      const div = document.createElement('div');
+      div.className = 'book';
+      div.innerHTML = `<h3>${book.title}</h3><p>${book.content}</p>`;
+      bookList.appendChild(div);
+    }
+
+    // Load initial stories
+    initialStories.forEach(renderBook);
+
+    // Handle form submission
+    bookForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const newBook = {
+        title: titleInput.value,
+        content: contentInput.value
+      };
+      renderBook(newBook);
+      bookForm.reset();
+    });
+  </script>
+</body>
+</html>
